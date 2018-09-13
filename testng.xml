@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+
+<suite name="TestAll">
+  
+  <test name="testMethod">
+    
+	<classes>
+      <class name="com.genesiis.sdb.fulltest.jobseeker.JSLogin" />
+    </classes>
+    
+  
+  </test>
+</suite>

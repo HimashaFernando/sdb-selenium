@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="sdb_testing" basedir=".">
+
+
+	<property name="src.dir" location="src" />
+	<property name="build.dir" location="build" />
+	<property name="lib.dir" location="lib" />
+	<property name="testng.output.dir" location="test-output" />
+	
+	<target name="show">
+		<echo> 
+		DISPLAY ANT BUILD PROPERTIES </echo>
+		<echo> 
+		********** ANT BUILTIN PROPERTIES ************** 
+		</echo>
+		<echo>  Ant file = ${ant.file} </echo>
+		<echo>  Ant project name = ${ant.project.name} </echo>
+		<echo>  Ant home = ${ant.home} </echo>
+		<echo>  Ant version = ${ant.version} </echo>
+		<echo>  Ant java version = ${ant.java.version} </echo>
+		<echo>  Basedir = ${basedir} </echo>
+		<echo>  Operating System = ${os.name} </echo>
+		<echo>  Java Home = ${java.home} </echo>
+		<echo>  User Home = ${user.home} </echo>
+		<echo>  User Name = ${user.name} </echo>
+		<echo> 
+		********** BUILD FILE/USER SPECIFIC PROPERTIES ************** 
+		</echo>
+		<echo>  Java Compiler Target JVM = ${ant.build.javac.target} </echo>
+		<echo>  Java Compiler Source Code JVM = ${ant.build.javac.source} </echo>
+		<echo>  Build Compiler = ${build.compiler} </echo>
+		<echo>  Javac Task to fork = ${sdb.build.fork} </echo>
+		<echo>  Javac Executable = ${sdb.build.executable} </echo>		
+	</target>
+	
+	<!-- Add the jar/class files to the classpath -->
+	<path id="classes">
+		<pathelement location="${build.dir}" />
+		<fileset dir="${lib.dir}">
+		</fileset>
+	</path>
+	
+	<!-- Define <testng> task -->
+	<taskdef name="testng" classname="org.testng.TestNGAntTask">
+		<classpath>
+			<pathelement location="lib/testng-6.14.3.jar" />
+		</classpath>
+	</taskdef>
+	
+	<!-- Check the availability of build directory -->
+	<target name="check">
+		<condition property="deldir">
+			<available file="${buildDir}" type="dir"/>
+		</condition>
+	</target>
+	
+	<!-- Clean the project -->
+	<target name="clean" description="Deletes build files" depends="check" if="deldir">
+		<echo>${RunMessage} - Cleaning build files</echo>
+		<delete dir="${build.dir}" />
+	</target>
+
+	<!-- Create the directories -->
+	<target name="makedir">
+		<mkdir dir="${build.dir}" />
+	</target>
+	
+	<!-- Compile the source -->
+	<target name="compile" depends="clean, makedir">
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="classes">
+		</javac>
+	</target>
+	
+	<!-- Run the test cases with testng as mentioned in the testng.xml -->
+	<target name="runTestNG" depends="compile">
+		<description>
+			Running the test cases with TestNG.
+		</description>
+		<mkdir dir="${testng.output.dir}" />
+		<!-- Create the output directory. -->
+		<testng outputdir="${testng.output.dir}" classpathref="classes">
+			<xmlfileset dir="." includes="testng.xml" />
+		</testng>
+	</target>
+
+
+</project>
